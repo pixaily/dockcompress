@@ -1,0 +1,179 @@
+version: "3.7"
+
+services: 
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - vhost:/etc/nginx/vhost.d
+      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./custom_proxy.conf:/etc/nginx/conf.d/custom_proxy.conf
+    restart: always
+    networks:
+      - wordpress
+
+  project1-db:
+    image: ${PROJECT_1_MYSQL_IMAGE}
+    container_name: ${PROJECT_1_NAME}-db
+    ports:
+      - ${PROJECT_1_MYSQL_PORT}:3306
+    command: ${PROJECT_1_MYSQL_MAX_ALLOWED_PACKET}
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${PROJECT_1_NAME}
+      MYSQL_USER: ${PROJECT_1_NAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - "project1-db:/var/lib/mysql"
+    restart: always
+    networks:
+      - wordpress
+      - project1
+
+  project1:
+    image: ${PROJECT_1_WORDPRESS_IMAGE}
+    container_name: ${PROJECT_1_NAME}-app
+    environment:
+      WORDPRESS_DB_HOST: ${PROJECT_1_NAME}-db
+      WORDPRESS_DB_NAME: ${PROJECT_1_NAME}
+      WORDPRESS_DB_USER: ${PROJECT_1_NAME}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DEBUG: ${PROJECT_1_WORDPRESS_DEBUG}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('AUTOMATIC_UPDATER_DISABLED', true);
+      VIRTUAL_HOST: ${PROJECT_1_VIRTUAL_HOST}
+    volumes:
+      - "project1:/var/www/html/wp-content"
+      - "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
+    restart: always
+    depends_on:
+      - project1-db
+    networks:
+      - wordpress
+      - project1
+
+  project2-db:
+    image: ${PROJECT_2_MYSQL_IMAGE}
+    container_name: ${PROJECT_2_NAME}-db
+    ports:
+      - ${PROJECT_2_MYSQL_PORT}:3306
+    command: ${PROJECT_2_MYSQL_MAX_ALLOWED_PACKET}
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${PROJECT_2_NAME}
+      MYSQL_USER: ${PROJECT_2_NAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - "project2-db:/var/lib/mysql"
+    restart: always
+    networks:
+      - wordpress
+      - project2
+
+  project2:
+    image: ${PROJECT_2_WORDPRESS_IMAGE}
+    container_name: ${PROJECT_2_NAME}-app
+    environment:
+      WORDPRESS_DB_HOST: ${PROJECT_2_NAME}-db
+      WORDPRESS_DB_NAME: ${PROJECT_2_NAME}
+      WORDPRESS_DB_USER: ${PROJECT_2_NAME}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DEBUG: ${PROJECT_2_WORDPRESS_DEBUG}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('AUTOMATIC_UPDATER_DISABLED', true);
+      VIRTUAL_HOST: ${PROJECT_2_VIRTUAL_HOST}
+    volumes:
+      - "project2:/var/www/html/wp-content"
+      - "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
+    restart: always
+    depends_on:
+      - project2-db
+    networks:
+      - wordpress
+      - project2
+
+  project3-db:
+    image: ${PROJECT_3_MYSQL_IMAGE}
+    container_name: ${PROJECT_3_NAME}-db
+    ports:
+      - ${PROJECT_3_MYSQL_PORT}:3306
+    command: ${PROJECT_3_MYSQL_MAX_ALLOWED_PACKET}
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: ${PROJECT_3_NAME}
+      MYSQL_USER: ${PROJECT_3_NAME}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - "project3-db:/var/lib/mysql"
+    restart: always
+    networks:
+      - wordpress
+      - project3
+
+  project3:
+    image: ${PROJECT_3_WORDPRESS_IMAGE}
+    container_name: ${PROJECT_3_NAME}-app
+    environment:
+      WORDPRESS_DB_HOST: ${PROJECT_3_NAME}-db
+      WORDPRESS_DB_NAME: ${PROJECT_3_NAME}
+      WORDPRESS_DB_USER: ${PROJECT_3_NAME}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DEBUG: ${PROJECT_3_WORDPRESS_DEBUG}
+      WORDPRESS_CONFIG_EXTRA: |
+        define('AUTOMATIC_UPDATER_DISABLED', true);
+      VIRTUAL_HOST: ${PROJECT_3_VIRTUAL_HOST}
+    volumes:
+      - "project3:/var/www/html/wp-content"
+      - "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
+    restart: always
+    depends_on:
+      - project3-db
+    networks:
+      - wordpress
+      - project3
+
+volumes:
+  certs:
+  html:
+  vhost:
+  dhparam:
+  project1-db:
+  project1:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/${PROJECT_1_FOLDER_PATH}"
+  project2-db:
+  project2:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/${PROJECT_2_FOLDER_PATH}"
+  project3-db:
+  project3:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "${PWD}/${PROJECT_3_FOLDER_PATH}"
+
+networks:
+  project1:
+    name: "${NETWORK_PREFIX}-${PROJECT_1_NAME}"
+    internal: true
+  project2:
+    name: "${NETWORK_PREFIX}-${PROJECT_2_NAME}"
+    internal: true
+  project3:
+    name: "${NETWORK_PREFIX}-${PROJECT_3_NAME}"
+    internal: true
+  wordpress:
+    name: "dcp"
+    external: true
