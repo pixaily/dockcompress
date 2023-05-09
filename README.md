@@ -1,5 +1,5 @@
 # DockComPress (DCP)
-Docker Composer for Wordpress is a `docker compose` configuration for single or multiple instaces of Wordpress with single Dokcer configuration.
+Docker Compose for Wordpress is a `docker compose` configuration for single or multiple instaces of Wordpress with single Dokcer configuration.
 
 ## It is not tested for production evironments
 
