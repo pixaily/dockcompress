@@ -17,6 +17,22 @@ services:
     networks:
       - wordpress
 
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: lets-encrypt-proxy-companion
+    depends_on:
+      - "nginx-proxy"
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      DEFAULT_EMAIL: you@your-email.com
+    restart: always
+    networks:
+      - wordpress
+
   project1-db:
     image: ${PROJECT_1_MYSQL_IMAGE}
     container_name: ${PROJECT_1_NAME}-db
@@ -47,6 +63,7 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('AUTOMATIC_UPDATER_DISABLED', true);
       VIRTUAL_HOST: ${PROJECT_1_VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${PROJECT_1_VIRTUAL_HOST}
     volumes:
       - "project1:/var/www/html/wp-content"
       - "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
@@ -87,6 +104,7 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('AUTOMATIC_UPDATER_DISABLED', true);
       VIRTUAL_HOST: ${PROJECT_2_VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${PROJECT_2_VIRTUAL_HOST}
     volumes:
       - "project2:/var/www/html/wp-content"
       - "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"
@@ -127,6 +145,7 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('AUTOMATIC_UPDATER_DISABLED', true);
       VIRTUAL_HOST: ${PROJECT_3_VIRTUAL_HOST}
+      LETSENCRYPT_HOST: ${PROJECT_3_VIRTUAL_HOST}
     volumes:
       - "project3:/var/www/html/wp-content"
       - "./uploads.ini:/usr/local/etc/php/conf.d/uploads.ini"

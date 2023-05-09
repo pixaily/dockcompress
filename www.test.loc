@@ -1,0 +1,1 @@
+rewrite ^/(.*)$ http://test.loc/$1 permanent;
