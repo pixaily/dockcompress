@@ -27,7 +27,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: ${PROJECT_1_NAME}
       MYSQL_USER: ${PROJECT_1_NAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${PROJECT_1_MYSQL_PASSWORD}
     volumes:
       - "project1-db:/var/lib/mysql"
     restart: always
@@ -67,7 +67,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: ${PROJECT_2_NAME}
       MYSQL_USER: ${PROJECT_2_NAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${PROJECT_2_MYSQL_PASSWORD}
     volumes:
       - "project2-db:/var/lib/mysql"
     restart: always
@@ -107,7 +107,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: ${PROJECT_3_NAME}
       MYSQL_USER: ${PROJECT_3_NAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${PROJECT_3_MYSQL_PASSWORD}
     volumes:
       - "project3-db:/var/lib/mysql"
     restart: always
