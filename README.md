@@ -8,8 +8,12 @@ This configuration will allow you to run several Wordpress instances with differ
 
 # How to use
 - Create `dcp` docker network with the following command in terminal/command line - `docker network create dcp`
-- Edit `.env` file
-  - Change the values of the variables that you need, like: `PROJECT_1_NAME=project`
-  - `PROJECT_#_MYSQL_PORT` should be differnet for every project and you can use this port to connect to the DB container
-- Open the folder containering the repo in terminal/command line and run `docker compose up -d`
+- Edit `.env` file, there is a comment `# UPDATE BASED ON YOUR NEEDS` for every item that may be updated based on your needs
+  - Change the values of the variables that you need, like: 
+    - `PROJECT_1_NAME=myproject`
+    - `PROJECT_2_NAME=myproject_old`
+  - The value of `PROJECT_#_MYSQL_PORT` should be differnet for every project and you must use this port to connect to the DB container, like: 
+    - `PROJECT_1_MYSQL_PORT=3306`
+    - `PROJECT_2_MYSQL_PORT=3307`
+- Open the folder containing the repo in terminal/command line and run `docker compose up -d`
 - Don't forget to add the virtual hosts to `hosts` file
