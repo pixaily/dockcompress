@@ -27,7 +27,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: ${PROJECT_1_NAME}
       MYSQL_USER: ${PROJECT_1_NAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${PROJECT_1_MYSQL_PASSWORD}
     volumes:
       - "project1-db:/var/lib/mysql"
     restart: always
@@ -45,7 +45,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${PROJECT_1_MYSQL_PASSWORD}
       WORDPRESS_DEBUG: ${PROJECT_1_WORDPRESS_DEBUG}
       WORDPRESS_CONFIG_EXTRA: |
-        define('AUTOMATIC_UPDATER_DISABLED', true);
+        ${PROJECT_1_WORDPRESS_AUTO_UPDATE}
       VIRTUAL_HOST: ${PROJECT_1_VIRTUAL_HOST}
     volumes:
       - "project1:/var/www/html/wp-content"
@@ -67,7 +67,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: ${PROJECT_2_NAME}
       MYSQL_USER: ${PROJECT_2_NAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${PROJECT_2_MYSQL_PASSWORD}
     volumes:
       - "project2-db:/var/lib/mysql"
     restart: always
@@ -85,7 +85,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${PROJECT_2_MYSQL_PASSWORD}
       WORDPRESS_DEBUG: ${PROJECT_2_WORDPRESS_DEBUG}
       WORDPRESS_CONFIG_EXTRA: |
-        define('AUTOMATIC_UPDATER_DISABLED', true);
+        ${PROJECT_2_WORDPRESS_AUTO_UPDATE}
       VIRTUAL_HOST: ${PROJECT_2_VIRTUAL_HOST}
     volumes:
       - "project2:/var/www/html/wp-content"
@@ -107,7 +107,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: ${PROJECT_3_NAME}
       MYSQL_USER: ${PROJECT_3_NAME}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: ${PROJECT_3_MYSQL_PASSWORD}
     volumes:
       - "project3-db:/var/lib/mysql"
     restart: always
@@ -125,7 +125,7 @@ services:
       WORDPRESS_DB_PASSWORD: ${PROJECT_3_MYSQL_PASSWORD}
       WORDPRESS_DEBUG: ${PROJECT_3_WORDPRESS_DEBUG}
       WORDPRESS_CONFIG_EXTRA: |
-        define('AUTOMATIC_UPDATER_DISABLED', true);
+        ${PROJECT_3_WORDPRESS_AUTO_UPDATE}
       VIRTUAL_HOST: ${PROJECT_3_VIRTUAL_HOST}
     volumes:
       - "project3:/var/www/html/wp-content"
